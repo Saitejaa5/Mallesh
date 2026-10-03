@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDown, ArrowRight, MapPin, Phone, Star } from "lucide-react";
+import { ArrowDown, ArrowRight, Clock, MapPin, Phone, Star } from "lucide-react";
 import { business } from "../data/business";
 
 const container = {
@@ -16,8 +16,15 @@ const item = {
 };
 
 function HeroPhoto() {
+  const reduceMotion = useReducedMotion();
+  const cardMotion = (delay: number) => ({
+    initial: reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
+
   return (
-    <div className="relative" aria-hidden="false">
+    <div className="min-w-0">
       <div className="relative overflow-hidden rounded-3xl border border-line bg-graphite">
         <div className="absolute inset-0 bg-blueprint-fine opacity-40 pointer-events-none" />
         <img
@@ -28,39 +35,58 @@ function HeroPhoto() {
           height={894}
           loading="eager"
         />
-        {/* top labels */}
-        <div className="absolute left-5 top-5 rounded-full bg-charcoal/85 backdrop-blur px-4 py-1.5 font-mono text-[10px] tracking-[0.25em] text-silver border border-line/60">
-          BAY — 01 / HYD
-        </div>
-        <div className="absolute right-5 top-5 rounded-full bg-ember px-4 py-1.5 font-mono text-[10px] tracking-[0.25em] text-white">
-          ● MULTI-BRAND SERVICE
+        {/* top labels — kept small at the top edge, clear of the entrance */}
+        <div className="absolute inset-x-0 top-0 flex items-start justify-between gap-2 p-3 sm:p-5">
+          <span className="rounded-full bg-charcoal/85 backdrop-blur px-3 sm:px-4 py-1.5 font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-silver border border-line/60 whitespace-nowrap">
+            BAY — 01 / HYD
+          </span>
+          <span className="rounded-full bg-ember px-3 sm:px-4 py-1.5 font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-white whitespace-nowrap">
+            ● MULTI-BRAND SERVICE
+          </span>
         </div>
         {/* bottom spec strip */}
-        <div className="relative flex items-center justify-between border-t border-line bg-charcoal/85 backdrop-blur px-5 py-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-muted">
-          <span>WASHING • DECORS • ALIGNMENT</span>
-          <span className="text-offwhite">EST. BACHUPALLY</span>
+        <div className="relative flex items-center justify-between gap-2 border-t border-line bg-charcoal/85 backdrop-blur px-5 py-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-muted">
+          <span className="truncate">WASHING • DECORS • ALIGNMENT</span>
+          <span className="shrink-0 text-offwhite">EST. BACHUPALLY</span>
         </div>
       </div>
 
-      {/* floating labels */}
-      <motion.div
-        animate={useReducedMotion() ? {} : { y: [0, -10, 0] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -left-3 sm:-left-6 top-16 rounded-2xl border border-line bg-charcoal/90 px-4 py-3 shadow-xl backdrop-blur"
-      >
-        <p className="font-mono text-[10px] tracking-[0.22em] text-ember">GOOGLE RATING</p>
-        <p className="mt-1 flex items-center gap-1.5 font-display text-xl font-bold text-offwhite">
-          4.6 <Star className="h-4 w-4 fill-ember text-ember" /> <span className="text-sm font-medium text-muted">/ 5</span>
-        </p>
-      </motion.div>
-      <motion.div
-        animate={useReducedMotion() ? {} : { y: [0, 10, 0] }}
-        transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-        className="absolute -right-2 sm:-right-5 bottom-14 rounded-2xl border border-line bg-charcoal/90 px-4 py-3 shadow-xl backdrop-blur"
-      >
-        <p className="font-mono text-[10px] tracking-[0.22em] text-muted">OPEN UNTIL</p>
-        <p className="mt-1 font-display text-xl font-bold text-offwhite">9:00 <span className="text-ember">PM</span></p>
-      </motion.div>
+      {/* supporting info cards — outside the photograph, no overlap */}
+      <div className="mt-4 grid grid-cols-1 min-[420px]:grid-cols-2 gap-3">
+        <motion.div
+          {...cardMotion(0.55)}
+          className="flex items-center gap-3 rounded-2xl border border-line bg-charcoal/90 px-4 py-3"
+        >
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-ember/30 bg-ember/10">
+            <Star className="h-4 w-4 fill-ember text-ember" aria-hidden="true" />
+          </span>
+          <span className="min-w-0">
+            <span className="flex items-baseline gap-1.5 font-display text-lg font-bold text-offwhite">
+              4.6 <Star className="h-3.5 w-3.5 self-center fill-ember text-ember" aria-hidden="true" />
+              <span className="text-sm font-medium text-muted">/ 5</span>
+            </span>
+            <span className="mt-0.5 block font-mono text-[10px] tracking-[0.22em] text-muted">
+              GOOGLE RATING <span className="text-ember">·</span> <span className="text-silver">9 REVIEWS</span>
+            </span>
+          </span>
+        </motion.div>
+        <motion.div
+          {...cardMotion(0.68)}
+          className="flex items-center gap-3 rounded-2xl border border-line bg-charcoal/90 px-4 py-3"
+        >
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-ember/30 bg-ember/10">
+            <Clock className="h-4 w-4 text-ember" aria-hidden="true" />
+          </span>
+          <span className="min-w-0">
+            <span className="block font-display text-lg font-bold text-offwhite">
+              9:00 <span className="text-ember">PM</span>
+            </span>
+            <span className="mt-0.5 block font-mono text-[10px] tracking-[0.22em] text-muted">
+              OPEN UNTIL
+            </span>
+          </span>
+        </motion.div>
+      </div>
     </div>
   );
 }
